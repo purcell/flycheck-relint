@@ -17,9 +17,9 @@ Installation
 ------------
 
 The recommended way to get `flycheck-relint` is as a package from the
-[MELPA][melpa] repository. The version of `flycheck-relint` there will
+[MELPA](https://melpa.org) repository. The version of `flycheck-relint` there will
 always be up-to-date. There may also be packages in [MELPA
-Stable][melpa-stable], which track the [latest numbered tag][tags].
+Stable](https://stable.melpa.org), which track the latest numbered tag.
 
 To register the checker, use something like this in your emacs startup file:
 
