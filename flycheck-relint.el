@@ -6,7 +6,7 @@
 ;; Keywords: lisp
 ;; Version: 0
 ;; URL: https://github.com/purcell/flycheck-relint
-;; Package-Requires: ((emacs "24.4") (flycheck "0.22") (relint "1.13"))
+;; Package-Requires: ((emacs "26.1") (flycheck "0.22") (relint "1.13"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
