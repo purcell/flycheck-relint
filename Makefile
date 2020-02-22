@@ -1,7 +1,7 @@
 EMACS ?= emacs
 
 # A space-separated list of required package names
-NEEDED_PACKAGES = "package-lint flycheck"
+NEEDED_PACKAGES = package-lint flycheck relint
 
 INIT_PACKAGES="(progn \
   (require 'package) \
