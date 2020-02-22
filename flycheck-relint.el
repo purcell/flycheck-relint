@@ -1,4 +1,4 @@
-;;; flycheck-relint.el --- A Flycheck checker for elisp package authors
+;;; flycheck-relint.el --- A Flycheck checker for elisp regular expressions
 
 ;; Copyright (C) 2020  Steve Purcell
 
