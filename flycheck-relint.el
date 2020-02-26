@@ -86,7 +86,8 @@ Add `emacs-lisp-relint' to `flycheck-checkers' and set up the checker chain."
   (interactive)
   (add-to-list 'flycheck-checkers 'emacs-lisp-relint t)
   (flycheck-add-next-checker 'emacs-lisp-checkdoc 'emacs-lisp-relint t)
-  (flycheck-add-next-checker 'emacs-lisp-package 'emacs-lisp-relint t))
+  (when (flycheck-valid-checker-p 'emacs-lisp-package)
+    (flycheck-add-next-checker 'emacs-lisp-package 'emacs-lisp-relint t)))
 
 
 (provide 'flycheck-relint)
