@@ -6,7 +6,7 @@
 ;; Keywords: lisp
 ;; Version: 0
 ;; URL: https://github.com/purcell/flycheck-relint
-;; Package-Requires: ((emacs "26.1") (flycheck "0.22") (relint "1.13"))
+;; Package-Requires: ((emacs "26.1") (flycheck "0.22") (relint "1.14"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -35,38 +35,28 @@
 
 (require 'flycheck)
 (require 'relint)
-
-
-(defvar flycheck-emacs-lisp-relint--running)
-(defvar flycheck-emacs-lisp-relint--current-errors)
-
-
-(defun flycheck-relint--report-hook (file pos path message)
-  "Hook used for advice on `relint--report'.
-FILE, POS, PATH and MESSAGE are as for that function."
-  (when flycheck-emacs-lisp-relint--running
-    (let ((pos-line-col (relint--pos-line-col-from-toplevel-pos-path pos path)))
-      (unless (relint--suppression (nth 0 pos-line-col) message)
-        (push (flycheck-error-new-at (nth 1 pos-line-col)
-                                     (nth 2 pos-line-col)
-                                     'error
-                                     message
-                                     :checker 'emacs-lisp-relint)
-              flycheck-emacs-lisp-relint--current-errors)))))
-
-(advice-add 'relint--report :after 'flycheck-emacs-lisp-relint--report-hook)
+(require 'pcase)
 
 
 (defun flycheck-relint--start (checker callback)
   "Flycheck start function for relint.
 CHECKER is this checker, and CALLBACK is the flycheck dispatch function."
-  (let ((source-buf (current-buffer))
-        (flycheck-emacs-lisp-relint--running t)
-        flycheck-emacs-lisp-relint--current-errors)
-    (with-temp-buffer
-      (relint--scan-buffer source-buf (current-buffer) t)
-      (funcall callback 'finished flycheck-emacs-lisp-relint--current-errors))))
+  (funcall callback 'finished
+           (mapcar (pcase-lambda (`(,message ,expr-pos ,error-pos ,str ,str-idx))
+                     (if error-pos
+                         (flycheck-relint--error-at error-pos message)
+                       (flycheck-relint--error-at expr-pos (format "%s\nin %S" message str))))
+                   (relint-buffer (current-buffer)))))
 
+
+(defun flycheck-relint--error-at (pos message)
+  "Create a flycheck error with MESSAGE for POS."
+  (save-excursion
+    (goto-char pos)
+    (move-beginning-of-line 1)
+    (let* ((line (line-number-at-pos))
+           (col (- pos (point))))
+      (flycheck-error-new-at line col 'error message :checker checker))))
 
 
 

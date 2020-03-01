@@ -10,9 +10,6 @@ This library provides a Flycheck checker for `rx` and string regular
 expressions in Emacs Lisp files, using
 [relint](https://elpa.gnu.org/packages/relint.html).
 
-Currently the integration is a little hacky, but this can hopefully be
-improved as `relint` evolves.
-
 Installation
 ------------
 
