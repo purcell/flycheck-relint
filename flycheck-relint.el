@@ -56,7 +56,7 @@ CHECKER is this checker, and CALLBACK is the flycheck dispatch function."
     (move-beginning-of-line 1)
     (let* ((line (line-number-at-pos))
            (col (- pos (point))))
-      (flycheck-error-new-at line col 'error message :checker checker))))
+      (flycheck-error-new-at line (1+ col) 'error message :checker 'flycheck-relint))))
 
 
 
