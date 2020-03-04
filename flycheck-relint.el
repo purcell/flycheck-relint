@@ -1,4 +1,4 @@
-;;; flycheck-relint.el --- A Flycheck checker for elisp regular expressions
+;;; flycheck-relint.el --- A Flycheck checker for elisp regular expressions  -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020  Steve Purcell
 
