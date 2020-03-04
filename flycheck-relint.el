@@ -69,7 +69,7 @@ CHECKER is this checker, and CALLBACK is the flycheck dispatch function."
 (flycheck-define-generic-checker 'emacs-lisp-relint
   "Report errors detected by `relint'."
   :start #'flycheck-relint--start
-  :modes '(emacs-lisp-mode))
+  :modes '(emacs-lisp-mode lisp-interaction-mode))
 
 
 
