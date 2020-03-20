@@ -44,8 +44,9 @@ CHECKER is this checker, and CALLBACK is the flycheck dispatch function."
   (funcall callback 'finished
            (mapcar (pcase-lambda (`(,message ,expr-pos ,error-pos ,str ,str-idx ,severity))
                      (if error-pos
-                         (flycheck-relint--error-at severity error-pos message)
+                         (flycheck-relint--error-at error-pos severity message)
                        (flycheck-relint--error-at expr-pos
+                                                  severity
                                                   (mapconcat 'identity
                                                              (append (list message (relint--quote-string str))
                                                                      (when str-idx (list (concat " " (relint--caret-string str str-idx)))))
