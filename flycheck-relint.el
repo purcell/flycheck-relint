@@ -48,8 +48,11 @@ CHECKER is this checker, and CALLBACK is the flycheck dispatch function."
                        (flycheck-relint--error-at expr-pos
                                                   severity
                                                   (mapconcat 'identity
-                                                             (append (list message (relint--quote-string str))
-                                                                     (when str-idx (list (concat " " (relint--caret-string str str-idx)))))
+                                                             (cons message
+                                                                   (when str
+                                                                     (cons (relint--quote-string str)
+                                                                           (when str-idx
+                                                                             (list (concat " " (relint--caret-string str str-idx)))))))
                                                              "\n"))))
                    (relint-buffer (current-buffer)))))
 
