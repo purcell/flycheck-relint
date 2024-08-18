@@ -10,6 +10,8 @@ This library provides a Flycheck checker for `rx` and string regular
 expressions in Emacs Lisp files, using
 [relint](https://elpa.gnu.org/packages/relint.html).
 
+Use relint 1.15 - 1.24, this is not yet compatible with 2.0
+
 Installation
 ------------
 
@@ -25,8 +27,15 @@ To register the checker, use something like this in your emacs startup file:
   (flycheck-relint-setup))
 ```
 
-<hr>
+For use-package:
 
+```el
+(use-package flycheck-relint
+  :after (flycheck relint)
+  :config (flycheck-relint-setup))
+```
+
+<hr>
 
 [💝 Support this project and my other Open Source work](https://www.patreon.com/sanityinc)
 
