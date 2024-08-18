@@ -4,9 +4,12 @@
 
 ;; Author: Steve Purcell <steve@sanityinc.com>
 ;; Keywords: lisp
-;; Package-Version: 0-pre
+;; Package-Version: 20240818.000001
+;; Package-X-Original-Version: 0.1
 ;; URL: https://github.com/purcell/flycheck-relint
 ;; Package-Requires: ((emacs "26.1") (flycheck "0.22") (relint "1.15"))
+;; Modified (C) 2024 Johnathon Weare
+;; Use relint 1.15 - 1.24, not yet compatible with 2.0
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -37,8 +40,7 @@
 (require 'relint)
 (require 'pcase)
 
-
-(defun flycheck-relint--start (checker callback)
+(defun flycheck-relint--start (_checker callback)
   "Flycheck start function for relint.
 CHECKER is this checker, and CALLBACK is the flycheck dispatch function."
   (funcall callback 'finished
@@ -56,7 +58,6 @@ CHECKER is this checker, and CALLBACK is the flycheck dispatch function."
                                                              "\n"))))
                    (relint-buffer (current-buffer)))))
 
-
 (defun flycheck-relint--error-at (pos severity message)
   "Create a flycheck error with MESSAGE and SEVERITY for POS."
   (save-excursion
@@ -66,7 +67,6 @@ CHECKER is this checker, and CALLBACK is the flycheck dispatch function."
            (col (- pos (point))))
       (flycheck-error-new-at line (1+ col) severity message :checker 'flycheck-relint))))
 
-
 
 ;;; Checker definition
 
@@ -74,8 +74,6 @@ CHECKER is this checker, and CALLBACK is the flycheck dispatch function."
   "Report errors detected by `relint'."
   :start #'flycheck-relint--start
   :modes '(emacs-lisp-mode lisp-interaction-mode))
-
-
 
 ;;;###autoload
 (defun flycheck-relint-setup ()
@@ -86,7 +84,6 @@ Add `emacs-lisp-relint' to `flycheck-checkers' and set up the checker chain."
   (flycheck-add-next-checker 'emacs-lisp-checkdoc 'emacs-lisp-relint t)
   (when (flycheck-valid-checker-p 'emacs-lisp-package)
     (flycheck-add-next-checker 'emacs-lisp-package 'emacs-lisp-relint t)))
-
 
 (provide 'flycheck-relint)
 ;;; flycheck-relint.el ends here
