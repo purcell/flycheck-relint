@@ -72,7 +72,7 @@
                         (make-string (- esc-end esc-beg) ?^))))
     (format "  \"%s\"\n   %s" esc-str caret)))
 
-(defun flycheck-relint--diag-to-flycheck (diag)
+(defun flycheck-relint--diag-to-flycheck (diag group)
   (let* ((message (relint-diag-message diag))
          (string (relint-diag-string diag))
          (msg (if (and string
@@ -95,17 +95,22 @@
                                ;; add 1 to make interval half-open
                                (and end-pos (1+ end-pos))
                                (relint-diag-severity diag)
-                               msg)))
+                               msg group)))
 
 (defun flycheck-relint--start (_checker callback)
   "Flycheck start function for relint.
 CHECKER is this checker, and CALLBACK is the flycheck dispatch function."
-  (funcall callback 'finished
-           (mapcar #'flycheck-relint--diag-to-flycheck
-                   (relint-buffer (current-buffer)))))
+  (let ((group nil))
+    (funcall callback 'finished
+             (mapcar (lambda (diag)
+                       ;; In relint, `info'-level diags that follow a
+                       ;; non-`info' diag all belong to the same group.
+                       (unless (eq (relint-diag-severity diag) 'info)
+                         (setq group (make-symbol "relint")))  ;start new group
+                       (flycheck-relint--diag-to-flycheck diag group))
+                     (relint-buffer (current-buffer))))))
 
-
-(defun flycheck-relint--error-at (beg end severity message)
+(defun flycheck-relint--error-at (beg end severity message group)
   "Create a flycheck error with MESSAGE and SEVERITY for [BEG,END)."
   (let* ((beg-line (line-number-at-pos beg t))
          (beg-col (save-excursion (goto-char beg) (1+ (current-column))))
@@ -114,6 +119,7 @@ CHECKER is this checker, and CALLBACK is the flycheck dispatch function."
                                            (1+ (current-column))))))
     (flycheck-error-new-at beg-line beg-col severity message
                            :end-line end-line :end-column end-col
+                           :group group
                            :checker 'flycheck-relint)))
 
 
